@@ -1,5 +1,7 @@
 package com.ryanheise.audioservice;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -735,7 +737,11 @@ public class AudioService extends MediaBrowserServiceCompat {
     }
 
     private void internalStartForeground() {
-        startForeground(NOTIFICATION_ID, buildNotification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            super.startForeground(NOTIFICATION_ID, buildNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        } else {
+            startForeground(NOTIFICATION_ID, buildNotification());
+        }
         notificationCreated = true;
     }
 
